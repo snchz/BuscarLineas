@@ -27,31 +27,24 @@ public class BuscarLineas {
 				listado.add(args[i]);
 		}
 		try{
-			if (fichero==null){
-				System.out.println("Introduce el nombre del fichero:");
-				fichero=System.console().readLine();;
-			}
 			if (args.length<2){
-				boolean salir=false;
-				String entrada="";
-				while (!salir){
-					System.out.println("Introduce el valor a buscar (N si no queres buscar mas):");
-					entrada=System.console().readLine();;
-					if (entrada.equals("N"))
-						salir=true;
-					else
-						listado.add(entrada);
-				}
-				
+				System.err.println("USO: BuscarLineas.jar Fichero Termino1 Termino2...");
+			}else {
+				System.out.println("Buscando en el fichero "+fichero+" el listado de palabras siguientes: "+listado.toString());
+				bl.generarFicheroBusqueda(fichero, listado);
 			}
-			System.out.println("Buscando en el fichero "+fichero+" el listado de palabras siguientes: "+listado.toString());
-			bl.generarFicheroBusqueda(fichero, listado);
 		} catch(Exception e){
 			e.printStackTrace();
 		}
 		
 	}
 	
+	/**
+	 * Lee del "fichero" y busca cada linea que tenga alguno de los terminos en la lista "listaAbuscar"
+	 * Como salida genera un fichero Resultado_***_.txt indicando en que lineas encuentra alguno de los terminos
+	 * @param fichero
+	 * @param listaAbuscar
+	 */
 	public void generarFicheroBusqueda(String fichero, List<String> listaAbuscar){
 		BufferedReader br=null;
 		BufferedWriter bw=null;
@@ -62,12 +55,10 @@ public class BuscarLineas {
 			bw = new BufferedWriter(new FileWriter("Resultado_"+timeStamp+".txt"));
 			bw.append("Resultado de busqueda en el fichero "+fichero+" del listado de palabras: "+listaAbuscar.toString());
 		    String line = br.readLine();
-		    //StringBuilder salida= new StringBuilder();
 		    int nLinea=1;
 		    while (line != null) {
-		    	if (encuentraLista(line,listaAbuscar)){//2014-02-072014-02-07
-		    		bw.append("\nLinea Encontrada: "+String.format("%1$-10s",nLinea)+"\t\tContenido: "+line);		
-		    		//bw.newLine();
+		    	if (encuentraLista(line,listaAbuscar)){
+		    		bw.append("\nLinea Encontrada: "+String.format("%1$-10s",nLinea)+"\t\tContenido: "+line);
 		    	}
 		    	if (nLinea%100000==0)
 		    		System.out.println(nLinea);
@@ -100,6 +91,12 @@ public class BuscarLineas {
 	}
 
 
+	/**
+	 * Dada una linea "line" retorna true si la linea tiene alguno de los terminos de la lista "listaAbuscar"
+	 * @param line
+	 * @param listaAbuscar
+	 * @return
+	 */
 	private boolean encuentraLista(String line, List<String> listaAbuscar) {
 		boolean res=false;
 		for(String s:listaAbuscar){
